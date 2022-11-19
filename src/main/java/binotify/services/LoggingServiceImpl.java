@@ -7,6 +7,7 @@ import javax.jws.WebService;
 import javax.xml.ws.WebServiceContext;
 
 import binotify.dao.LoggingImpl;
+import binotify.model.Logging;
 
 @WebService
 public class LoggingServiceImpl implements LoggingService {
@@ -15,10 +16,10 @@ public class LoggingServiceImpl implements LoggingService {
     private WebServiceContext wsContext;
 
     @Inject
-    private LoggingImpl loggingImpl;
+    private LoggingImpl loggingImpl = new LoggingImpl();
 
     @WebMethod
-    public String getLogging() {
-        return loggingImpl.get(1).toString();
+    public Logging getLogging(int id) {
+        return loggingImpl.get(id);
     }
 }

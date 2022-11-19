@@ -5,7 +5,7 @@ import java.sql.*;
 public class DataSourceFactory {
     private static String HOST = "127.0.0.1";
     private static String PORT = "3306";
-    private static String DATABASE = "binotify-subscriptions";
+    private static String DATABASE = "binotify_subscriptions";
     private static String USER = "root";
     private static String PASSWORD = "root";
 

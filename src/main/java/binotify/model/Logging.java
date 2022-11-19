@@ -1,14 +1,20 @@
 package binotify.model;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+
 public class Logging {
     // id, description, IP, endpoint, requested_at
     private int id;
     private String description;
     private String IP;
     private String endpoint;
-    private String requested_at;
+    private Timestamp requested_at;
     
-    public Logging(int id, String description, String IP, String endpoint, String requested_at) {
+    public Logging() {
+    }
+
+    public Logging(int id, String description, String IP, String endpoint, Timestamp requested_at) {
         this.id = id;
         this.description = description;
         this.IP = IP;
@@ -29,8 +35,26 @@ public class Logging {
     public String get_endpoint() {
         return endpoint;
     }
-    public String get_requested_at() {
+    public Timestamp get_requested_at() {
         return requested_at;
+    }
+
+
+    // setter function of all attributes
+    public void set_id(int id) {
+        this.id = id;
+    }
+    public void set_description(String description) {
+        this.description = description;
+    }
+    public void set_IP(String IP) {
+        this.IP = IP;
+    }
+    public void set_endpoint(String endpoint) {
+        this.endpoint = endpoint;
+    }
+    public void set_requested_at(Timestamp requested_at) {
+        this.requested_at = requested_at;
     }
 
 }

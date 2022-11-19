@@ -2,9 +2,10 @@ package binotify.services;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
+import binotify.model.Logging;
 
 @WebService
 public interface LoggingService {
     @WebMethod
-    public String getLogging();
+    public Logging getLogging(int id);
 }
