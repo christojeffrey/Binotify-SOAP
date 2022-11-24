@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
-        Endpoint.publish("http://localhost:8080/api/hello", new HelloImpl());
-        Endpoint.publish("http://localhost:8080/api/logging", new LoggingServiceImpl());
+        Endpoint.publish("http://0.0.0.0:8080/api/hello", new HelloImpl());
+        Endpoint.publish("http://0.0.0.0:8080/api/logging", new LoggingServiceImpl());
     }
 }
