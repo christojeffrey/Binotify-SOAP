@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface Dao<T> {
-    T get(int id) throws SQLException;
+    // T get(int id) throws SQLException;
     // List<T> get_all() throws SQLException;
     // boolean create(T t) throws SQLException;
     // boolean update(T t) throws SQLException;

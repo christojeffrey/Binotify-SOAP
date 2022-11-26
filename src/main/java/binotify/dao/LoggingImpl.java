@@ -1,41 +1,36 @@
 package binotify.dao;
 
-import binotify.dao.LoggingInterface;
 import binotify.model.Logging;
 import java.sql.*;
-import java.util.Optional;
-import javax.jws.WebService;
 
+import javax.annotation.Resource;
+import javax.jws.WebMethod;
+import javax.jws.WebService;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.handler.MessageContext;
+
+// a singleton. behaves like a function call. this is the primary way to interact with the subscrtion table in database
 @WebService
 public class LoggingImpl implements LoggingInterface {
-    // private LoggingImpl() {
-    // }
-    private static LoggingImpl instance = new LoggingImpl();
-
+    private static LoggingImpl instance = null;
+    private LoggingImpl() {
+    }
     public static LoggingImpl getInstance() {
+        if(instance == null) {
+            instance = new LoggingImpl();
+        }
         return instance;
     }
 
-    @Override
-    public Logging get(int id) {
-        String query = "SELECT * FROM logging WHERE id = ?";
-        Logging logging = new Logging();
-
-        Connection conn = DataSourceFactory.getConn();
-        try (PreparedStatement statement = conn.prepareStatement(query)) {
-            statement.setInt(1, id);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    logging.set_id(resultSet.getInt("id"));
-                    logging.set_description(resultSet.getString("description"));
-                    logging.set_IP(resultSet.getString("IP"));
-                    logging.set_endpoint(resultSet.getString("endpoint"));
-                    logging.set_requested_at(resultSet.getTimestamp("requested_at"));
-                }
-            }
-        } catch (SQLException throwable) {
-            throwable.printStackTrace();
-        }
-        return logging;
+    public static boolean create(String IP, String description, String endpoint){
+    
+        // description, IP, endpoint, requested_at
+        return true;
     }
+    
+    
+
+
+
 }

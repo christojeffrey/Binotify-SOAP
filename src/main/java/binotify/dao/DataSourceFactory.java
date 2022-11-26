@@ -33,6 +33,7 @@ public class DataSourceFactory {
         return instance;
     }
 
+    // this is the public method to get the connection
     public static Connection getConn() {
         return instance.conn;
     }

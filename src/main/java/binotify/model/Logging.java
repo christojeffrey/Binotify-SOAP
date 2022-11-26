@@ -1,6 +1,5 @@
 package binotify.model;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 
 public class Logging {
