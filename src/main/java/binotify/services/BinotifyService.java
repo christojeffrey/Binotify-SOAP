@@ -15,11 +15,13 @@ public interface BinotifyService {
     // with argument example
     public String helloFriend(String name);
 
-    public Respond newSubscription(String creator_id, String subscriber_id);
+    public Respond newSubscription(String creator_id, String subscriber_id, String api_key);
 
-    public Respond checkSubscription( String creator_id, String subscriber_id);
+    public Respond checkSubscription( String creator_id, String subscriber_id, String api_key);
 
-    public Respond updateSubscription( String creator_id, String subscriber_id, String status);
+    public List<Subscription> getAllSubscriptionRequests(String api_key);
 
-    public List<Subscription> getAllSubscriptionRequests();
+    public Respond updateSubscription( String creator_id, String subscriber_id, String status, String api_key);
+
+    public Respond generateApiKey(String password, String csp, String validUntil);
 }
