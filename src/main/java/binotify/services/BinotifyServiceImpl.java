@@ -50,20 +50,23 @@ public class BinotifyServiceImpl implements BinotifyService {
         return "Hello " + name + "!"; 
     }
 
-    public Respond newSubscription(String creator_id, String subscriber_id) {
+    public Respond newSubscription(String creator_id, String subscriber_id, String api_key) {
         // todo: add logging
         String IP = this.getReqIP();
         String uri = this.getReqURI();
-        String description = new Object() {}
+        String this_method_name = new Object() {}
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        LoggingImpl.create(IP,description,uri);
+        LoggingImpl.create(IP,this_method_name,uri);
 
 
 
         // create a new subscription
         try {
+            ApiKey key = new ApiKey(api_key);
+            key.isValid(this_method_name);
+
             boolean isSuccess = SubscriptionImpl.create(subscriber_id, creator_id);
             if (!isSuccess) {
                 return new Respond("error", "subscription already exists");
@@ -75,20 +78,23 @@ public class BinotifyServiceImpl implements BinotifyService {
         }
     }
 
-    public Respond checkSubscription( String creator_id, String subscriber_id) {
+    public Respond checkSubscription( String creator_id, String subscriber_id, String api_key) {
         // todo: add logging
         String IP = this.getReqIP();
         String uri = this.getReqURI();
-        String description = new Object() {}
+        String this_method_name = new Object() {}
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        LoggingImpl.create(IP,description,uri);
+        LoggingImpl.create(IP,this_method_name,uri);
 
 
         // get the status of a subscription
         try {
-           Subscription subs = SubscriptionImpl.get(creator_id, subscriber_id);
+            ApiKey key = new ApiKey(api_key);
+            key.isValid(this_method_name);
+
+            Subscription subs = SubscriptionImpl.get(creator_id, subscriber_id);
             // check if null
             if (subs == null) {
                 return new Respond("error");
@@ -100,19 +106,22 @@ public class BinotifyServiceImpl implements BinotifyService {
         }
     }
 
-    public Respond updateSubscription( String creator_id, String subscriber_id, String status) {
+    public Respond updateSubscription( String creator_id, String subscriber_id, String status, String api_key) {
         // todo: add logging
         String IP = this.getReqIP();
         String uri = this.getReqURI();
-        String description = new Object() {}
+        String this_method_name = new Object() {}
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        LoggingImpl.create(IP,description,uri);
+        LoggingImpl.create(IP,this_method_name,uri);
 
 
         // update the status of a subscription
         try {
+            ApiKey key = new ApiKey(api_key);
+            key.isValid(this_method_name);
+
             boolean isSuccess = SubscriptionImpl.update(creator_id, subscriber_id, status);
             if (!isSuccess) {
                 return new Respond("error", "subscription does not exist");
@@ -128,11 +137,11 @@ public class BinotifyServiceImpl implements BinotifyService {
         // todo: add logging
         String IP = this.getReqIP();
         String uri = this.getReqURI();
-        String description = new Object() {}
+        String this_method_name = new Object() {}
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        LoggingImpl.create(IP,description,uri);
+        LoggingImpl.create(IP,this_method_name,uri);
         ApiKey key;
         Date valid_until_d;
 
