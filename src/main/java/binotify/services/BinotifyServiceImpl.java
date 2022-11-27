@@ -2,6 +2,7 @@ package binotify.services;
 
 import javax.jws.WebService;
 
+import binotify.dao.LoggingImpl;
 import binotify.dao.SubscriptionImpl;
 import binotify.model.Respond;
 import com.sun.net.httpserver.HttpExchange;
