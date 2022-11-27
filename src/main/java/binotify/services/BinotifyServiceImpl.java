@@ -13,6 +13,8 @@ import java.net.InetSocketAddress;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
@@ -107,7 +109,6 @@ public class BinotifyServiceImpl implements BinotifyService {
     }
 
     public Respond updateSubscription( String creator_id, String subscriber_id, String status, String api_key) {
-        // todo: add logging
         String IP = this.getReqIP();
         String uri = this.getReqURI();
         String this_method_name = new Object() {}
@@ -162,12 +163,19 @@ public class BinotifyServiceImpl implements BinotifyService {
         return new Respond("token", key.getKey());
     }
     
-    public List<Subscription> getAllSubscriptionRequests() {
-        // todo: add logging
-
-        // update the status of a subscription
+    public List<Subscription> getAllSubscriptionRequests(String api_key) {
+        String IP = this.getReqIP();
+        String uri = this.getReqURI();
+        String this_method_name = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        LoggingImpl.create(IP,this_method_name,uri);
         
         try {
+            ApiKey key = new ApiKey(api_key);
+            key.isValid(this_method_name);
+
             List<Subscription> subscriptions = SubscriptionImpl.getAll();
             return subscriptions;
         } catch (Exception e) {
