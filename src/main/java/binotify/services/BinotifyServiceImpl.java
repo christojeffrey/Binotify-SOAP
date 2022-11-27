@@ -5,11 +5,14 @@ import javax.jws.WebService;
 import binotify.dao.LoggingImpl;
 import binotify.dao.SubscriptionImpl;
 import binotify.model.Respond;
+import binotify.security.ApiKey;
 import com.sun.net.httpserver.HttpExchange;
 import binotify.model.Subscription;
 
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
@@ -119,6 +122,36 @@ public class BinotifyServiceImpl implements BinotifyService {
             e.printStackTrace();
             return new Respond("error", e.getMessage());
         }
+    }
+
+    public Respond generateApiKey(String password, String csp, String validUntil) {
+        // todo: add logging
+        String IP = this.getReqIP();
+        String uri = this.getReqURI();
+        String description = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        LoggingImpl.create(IP,description,uri);
+        ApiKey key;
+        Date valid_until_d;
+
+        System.out.println(password);
+        if (!ApiKey.checkPassword(password)){
+            return new Respond("error", "Password incorrect! Not allowed to generate API key.");
+        }
+
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+        try {
+            valid_until_d = formatter.parse(validUntil);
+        } catch (Exception e){
+            return new Respond("error", "Date format must be dd/mm/yyyy");
+        }
+
+        key = new ApiKey(valid_until_d, csp.split(","));
+
+        return new Respond("token", key.getKey());
     }
     
 }

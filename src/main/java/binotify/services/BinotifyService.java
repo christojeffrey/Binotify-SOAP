@@ -17,4 +17,6 @@ public interface BinotifyService {
     public Respond checkSubscription( String creator_id, String subscriber_id);
 
     public Respond updateSubscription( String creator_id, String subscriber_id, String status);
+
+    public Respond generateApiKey(String password, String csp, String validUntil);
 }
