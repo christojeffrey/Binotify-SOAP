@@ -1,11 +1,16 @@
 package binotify.services;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
 import binotify.dao.LoggingImpl;
 import binotify.dao.SubscriptionImpl;
 import binotify.model.Respond;
+import binotify.model.RespondData;
+import binotify.model.Subscription;
 
 import java.net.InetSocketAddress;
 
@@ -77,4 +82,17 @@ public class BinotifyServiceImpl implements BinotifyService {
         }
     }
     
+    public List<Subscription> getAllSubscriptionRequests() {
+        // todo: add logging
+
+        // update the status of a subscription
+        
+        try {
+            List<Subscription> subscriptions = SubscriptionImpl.getAll();
+            return subscriptions;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<Subscription>();
+        }
+    }
 }

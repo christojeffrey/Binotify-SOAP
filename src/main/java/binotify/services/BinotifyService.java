@@ -1,8 +1,11 @@
 package binotify.services;
+import java.util.List;
 
 import javax.jws.WebService;
 
 import binotify.model.Respond;
+import binotify.model.RespondData;
+import binotify.model.Subscription;
 
 @WebService
 public interface BinotifyService {
@@ -17,4 +20,6 @@ public interface BinotifyService {
     public Respond checkSubscription( String creator_id, String subscriber_id);
 
     public Respond updateSubscription( String creator_id, String subscriber_id, String status);
+
+    public List<Subscription> getAllSubscriptionRequests();
 }

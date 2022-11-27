@@ -6,6 +6,7 @@ public class Respond {
     private String status;
     // attribute message
     private String message;
+    
     // constructor
     public Respond() {
         this.status = "OK";
