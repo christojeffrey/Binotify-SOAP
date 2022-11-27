@@ -31,7 +31,7 @@ public class BinotifyServiceImpl implements BinotifyService {
         MessageContext mc = wsContext.getMessageContext();
         HttpExchange exchange = (HttpExchange)mc.get("com.sun.xml.ws.http.exchange");
         InetSocketAddress remoteAddress = exchange.getRemoteAddress();
-        String remoteHost = remoteAddress.getHostName();
+        String remoteHost = remoteAddress.getAddress().toString().split("/")[1];
         return remoteHost;
     }
 

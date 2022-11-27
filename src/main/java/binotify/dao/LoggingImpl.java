@@ -26,6 +26,7 @@ public class LoggingImpl implements LoggingInterface {
     public static void create(String IP, String description, String endpoint){
         String query = "INSERT INTO Logging (description, IP, endpoint) VALUES (?, ?, ?)";
         Connection conn = DataSourceFactory.getConn();
+        // System.out.println(IP);
         try (PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, description);
             statement.setString(2, IP);
