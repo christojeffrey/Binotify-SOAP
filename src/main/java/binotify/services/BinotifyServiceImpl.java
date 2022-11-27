@@ -121,4 +121,17 @@ public class BinotifyServiceImpl implements BinotifyService {
         }
     }
     
+    public List<Subscription> getAllSubscriptionRequests() {
+        // todo: add logging
+
+        // update the status of a subscription
+        
+        try {
+            List<Subscription> subscriptions = SubscriptionImpl.getAll();
+            return subscriptions;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<Subscription>();
+        }
+    }
 }

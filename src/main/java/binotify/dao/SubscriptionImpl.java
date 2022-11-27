@@ -1,9 +1,12 @@
 package binotify.dao;
 
+import java.security.interfaces.ECKey;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.ArrayList;
 
 import binotify.model.Subscription;
 
@@ -18,6 +21,10 @@ public class SubscriptionImpl {
     public static SubscriptionImpl getInstance() {
         return instance;
     }
+    // get 
+    // Endpoint Check Status Permintaan
+    // for US: memvalidasi apakah user terkait memiliki subscription terhadap penyanyi
+    // caller: REST service
     // get. will return null if the subscription does not exist
     public static Subscription get(String creator_id, String subscriber_id) {
         String query = "SELECT * FROM Subscription WHERE creator_id = ? AND subscriber_id = ?";
@@ -83,4 +90,31 @@ public class SubscriptionImpl {
         }
         return true;
     }   
+
+    // for US: admin meminta list request subsctiption (status = pending)
+    // caller: REST service
+    public static List<Subscription> getAll() {
+        String query = "SELECT * FROM Subscription WHERE status = ?";
+        Connection conn = DataSourceFactory.getConn();
+        List<Subscription> subscriptions = new ArrayList<Subscription>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, "PENDING");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Subscription subscription = new Subscription(
+                    rs.getString("creator_id"),
+                    rs.getString("subscriber_id"),
+                    rs.getString("status")
+                );
+                subscriptions.add(subscription);
+            }
+            
+            // todo: handle when get returns no result
+            return subscriptions;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
 }

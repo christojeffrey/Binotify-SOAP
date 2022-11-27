@@ -14,6 +14,7 @@ CREATE TABLE `Logging` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `Subscription` (`creator_id`, `subscriber_id`, `status`) VALUES (1, 2, 'ACCEPTED');
+INSERT INTO Subscription (creator_id, subscriber_id, status) VALUES (1, 2, 'PENDING');
+INSERT INTO Subscription (creator_id, subscriber_id, status) VALUES (2, 2, 'ACCEPTED');
 INSERT INTO Logging (description, IP, endpoint) VALUES ('test', '192.0.0.61', 'api/hello');
 

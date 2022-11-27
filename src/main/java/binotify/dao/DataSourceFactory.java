@@ -7,11 +7,11 @@ public class DataSourceFactory {
     
     
     
-    private static String HOST = "binotify_soap_database";
+    private static String HOST = "localhost";
     private static String PORT = "3306";
-    private static String DATABASE = "tubes";
-    private static String USER = "tubes";
-    private static String PASSWORD = "tubes";
+    private static String DATABASE = "binotify_subscriptions";
+    private static String USER = "root";
+    private static String PASSWORD = "root";
 
     private Connection conn = null;
     
