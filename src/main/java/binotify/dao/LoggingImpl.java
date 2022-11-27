@@ -23,10 +23,18 @@ public class LoggingImpl implements LoggingInterface {
         return instance;
     }
 
-    public static boolean create(String IP, String description, String endpoint){
-    
-        // description, IP, endpoint, requested_at
-        return true;
+    public static void create(String IP, String description, String endpoint){
+        String query = "INSERT INTO Logging (description, IP, endpoint) VALUES (?, ?, ?)";
+        Connection conn = DataSourceFactory.getConn();
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setString(1, description);
+            statement.setString(2, IP);
+            statement.setString(3, endpoint);
+            statement.executeUpdate();
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+            throw new RuntimeException(throwable);
+        }
     }
     
     

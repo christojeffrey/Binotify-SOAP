@@ -25,6 +25,7 @@ public class SubscriptionImpl {
     // Endpoint Check Status Permintaan
     // for US: memvalidasi apakah user terkait memiliki subscription terhadap penyanyi
     // caller: REST service
+    // get. will return null if the subscription does not exist
     public static Subscription get(String creator_id, String subscriber_id) {
         String query = "SELECT * FROM Subscription WHERE creator_id = ? AND subscriber_id = ?";
         String status = null;
@@ -34,11 +35,19 @@ public class SubscriptionImpl {
             ps.setString(1, creator_id);
             ps.setString(2, subscriber_id);
             ResultSet rs = ps.executeQuery();
+
+            // handle when get returns no result
+            if (!rs.isBeforeFirst() ) {    
+                return null;
+            }
+
             if (rs.next()) {
                 status = rs.getString("status");
             }
+    
+            rs.close();
+            ps.close();
 
-            // todo: handle when get returns no result
             return new Subscription(creator_id, subscriber_id, status);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -47,35 +56,39 @@ public class SubscriptionImpl {
     }
 
     // create a subscription
-    // Menerima Permintaan Subscription
-    // caller: Binotify App
-     public static void create(String creator_id, String subscriber_id){
+     public static boolean create(String creator_id, String subscriber_id){
         String query = "INSERT INTO Subscription (creator_id, subscriber_id) VALUES (?, ?)";
         Connection conn = DataSourceFactory.getConn();
         try (PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, subscriber_id);
             statement.setString(2, creator_id);
             statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            return true;
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+            throw new RuntimeException(throwable);
         }
     }
 
-    // Menerima Penerimaan / Penolakan Permintaan Subscription
-    // caller: REST service
-     public static void update( String creator_id, String subscriber_id, String status){
+     public static boolean update( String creator_id, String subscriber_id, String status){
         String query = "UPDATE Subscription SET status = ? WHERE subscriber_id = ? AND creator_id = ?";
         Connection conn = DataSourceFactory.getConn();
         try (PreparedStatement statement = conn.prepareStatement(query)) {
+
             statement.setString(1, status);
             statement.setString(2, subscriber_id);
             statement.setString(3, creator_id);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            Integer count = statement.executeUpdate();
+
+            // if count is 0, then the update failed
+            if(count == 0){
+                return false;
+            }
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+            throw new RuntimeException(throwable);
         }
+        return true;
     }   
 
     // for US: admin meminta list request subsctiption (status = pending)
