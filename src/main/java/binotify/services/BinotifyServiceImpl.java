@@ -145,7 +145,6 @@ public class BinotifyServiceImpl implements BinotifyService {
         ApiKey key;
         Date valid_until_d;
 
-        System.out.println(password);
         if (!ApiKey.checkPassword(password)){
             return new Respond("error", "Password incorrect! Not allowed to generate API key.");
         }
