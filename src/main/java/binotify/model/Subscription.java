@@ -16,25 +16,25 @@ public class Subscription {
         this.status = status;
     }
 
-    // getter function of all attributes
-    public String get_creator_id() {
+    // getter
+    public String getCreatorId() {
         return creator_id;
     }
-    public String get_subscriber_id() {
+    public String getSubscriberId() {
         return subscriber_id;
     }
-    public String get_status() {
+    public String getStatus() {
         return status;
     }
 
-    // setter function of all attributes
-    public void set_creator_id(String creator_id) {
+    // setter
+    public void setCreatorId(String creator_id) {
         this.creator_id = creator_id;
     }
-    public void set_subscriber_id(String subscriber_id) {
+    public void setSubscriberId(String subscriber_id) {
         this.subscriber_id = subscriber_id;
     }
-    public void set_status(String status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 }

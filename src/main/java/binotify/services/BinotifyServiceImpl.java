@@ -1,16 +1,14 @@
 package binotify.services;
 
-import javax.jws.WebMethod;
 import javax.jws.WebService;
 
-import binotify.dao.LoggingImpl;
 import binotify.dao.SubscriptionImpl;
 import binotify.model.Respond;
+import binotify.model.Subscription;
 
 import java.net.InetSocketAddress;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.spi.http.HttpExchange;
@@ -43,7 +41,10 @@ public class BinotifyServiceImpl implements BinotifyService {
 
         // create a new subscription
         try {
-            SubscriptionImpl.create(subscriber_id, creator_id);
+            boolean isSuccess = SubscriptionImpl.create(subscriber_id, creator_id);
+            if (!isSuccess) {
+                return new Respond("error", "subscription already exists");
+            }
             return new Respond("created");
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,8 +57,12 @@ public class BinotifyServiceImpl implements BinotifyService {
 
         // get the status of a subscription
         try {
-            String status = SubscriptionImpl.get(creator_id, subscriber_id).get_status();
-            return new Respond(status);
+           Subscription subs = SubscriptionImpl.get(creator_id, subscriber_id);
+            // check if null
+            if (subs == null) {
+                return new Respond("error");
+            }
+            return new Respond(subs.getStatus());
         } catch (Exception e) {
             e.printStackTrace();
             return new Respond("error", e.getMessage());
@@ -69,7 +74,10 @@ public class BinotifyServiceImpl implements BinotifyService {
 
         // update the status of a subscription
         try {
-            SubscriptionImpl.update(creator_id, subscriber_id, status);
+            boolean isSuccess = SubscriptionImpl.update(creator_id, subscriber_id, status);
+            if (!isSuccess) {
+                return new Respond("error", "subscription does not exist");
+            }
             return new Respond("updated");
         } catch (Exception e) {
             e.printStackTrace();
