@@ -53,7 +53,7 @@ public class BinotifyServiceImpl implements BinotifyService {
     }
 
     public Respond newSubscription(String creator_id, String subscriber_id, String api_key) {
-        // todo: add logging
+        // add logging
         String IP = this.getReqIP();
         String uri = this.getReqURI();
         String this_method_name = new Object() {}
@@ -61,8 +61,6 @@ public class BinotifyServiceImpl implements BinotifyService {
                 .getEnclosingMethod()
                 .getName();
         LoggingImpl.create(IP,this_method_name,uri);
-
-
 
         // create a new subscription
         try {
@@ -80,8 +78,8 @@ public class BinotifyServiceImpl implements BinotifyService {
         }
     }
 
-    public Respond checkSubscription( String creator_id, String subscriber_id, String api_key) {
-        // todo: add logging
+    public Respond checkSubscription(String creator_id, String subscriber_id, String api_key) {
+        // add logging
         String IP = this.getReqIP();
         String uri = this.getReqURI();
         String this_method_name = new Object() {}
@@ -109,6 +107,7 @@ public class BinotifyServiceImpl implements BinotifyService {
     }
 
     public Respond updateSubscription( String creator_id, String subscriber_id, String status, String api_key) {
+        // do logging
         String IP = this.getReqIP();
         String uri = this.getReqURI();
         String this_method_name = new Object() {}
@@ -135,7 +134,7 @@ public class BinotifyServiceImpl implements BinotifyService {
     }
 
     public Respond generateApiKey(String password, String csp, String validUntil) {
-        // todo: add logging
+        // add logging
         String IP = this.getReqIP();
         String uri = this.getReqURI();
         String this_method_name = new Object() {}
@@ -164,6 +163,7 @@ public class BinotifyServiceImpl implements BinotifyService {
     }
     
     public List<Subscription> getAllSubscriptionRequests(String api_key) {
+        // add logging
         String IP = this.getReqIP();
         String uri = this.getReqURI();
         String this_method_name = new Object() {}
