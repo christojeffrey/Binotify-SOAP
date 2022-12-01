@@ -20,6 +20,13 @@ import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 @WebService(endpointInterface = "binotify.services.BinotifyService")
 public class BinotifyServiceImpl implements BinotifyService {
 
@@ -125,6 +132,37 @@ public class BinotifyServiceImpl implements BinotifyService {
             boolean isSuccess = SubscriptionImpl.update(creator_id, subscriber_id, status);
             if (!isSuccess) {
                 return new Respond("error", "subscription does not exist");
+            }
+
+            // callback to update table subscription in binotify app
+            try {
+                URL callback_url = "http://localhost:8080/subscription/";
+                HttpURLConnection con = (HttpURLConnection) callback_url.openConnection();
+                con.setRequestMethod("POST");
+                con.setRequestProperty("Content-Type", "application/json");
+                con.setDoOutput(true);
+
+                // create and send the json
+                String jsonBodyString = String.format("{\"creator_id\": \"%s\", \"subscriber_id\": \"%s\", \"status\": \"%s\"}", creator_id, subscriber_id, status);
+                try (OutputStream os = con.getOutputStream()) {
+                    byte[] input = jsonBodyString.getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                }
+                
+                // read response from input stream
+                try (BufferedReader br = new BufferedReader(
+                    new InputStreamReader(con.getInputStream(), "utf-8"))) {
+                    StringBuilder response = new StringBuilder();
+                    String responseLine = null;
+                    while ((responseLine = br.readLine()) != null) {
+                        response.append(responseLine.trim());
+                    }
+                    System.out.println(response.toString());
+                }
+                con.getResponseCode();
+                
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             return new Respond("updated");
         } catch (Exception e) {
