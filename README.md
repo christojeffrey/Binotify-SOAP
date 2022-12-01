@@ -1,15 +1,13 @@
 # description
 
-# requirements
-Java 8, Maven
+a soap webservice created using jax-ws. this service is used to manage subscription to premium artists.
 
-# installation
+# database schema
 
-# setup repo
+## we use postman to test the api. we put the collection in the repository
 
-# how to run
-1. clean target folder and rebuild .jar file
-```mvn clean install```
-2. run the jar file
-```java -jar java -jar .\target\webservice-1.0-SNAPSHOT-jar-with-dependencies.jar```
-3. open localhost:8080/api/<api-name> in browser
+## work distribution
+
+# setup repo and running
+
+go to Binotify-Config repository. the that repo will setup every other repo.
