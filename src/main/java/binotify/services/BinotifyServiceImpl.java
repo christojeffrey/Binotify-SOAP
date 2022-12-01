@@ -136,7 +136,7 @@ public class BinotifyServiceImpl implements BinotifyService {
 
             // callback to update table subscription in binotify app
             try {
-                URL callback_url = "http://localhost:8080/subscription/";
+                URL callback_url = new URL("http://binotify_app_frontend:80/api/subscription/updateSubscription.php");
                 HttpURLConnection con = (HttpURLConnection) callback_url.openConnection();
                 con.setRequestMethod("POST");
                 con.setRequestProperty("Content-Type", "application/json");
@@ -157,7 +157,7 @@ public class BinotifyServiceImpl implements BinotifyService {
                     while ((responseLine = br.readLine()) != null) {
                         response.append(responseLine.trim());
                     }
-                    System.out.println(response.toString());
+                    System.out.println("response hitting php: " + response.toString());
                 }
                 con.getResponseCode();
                 
