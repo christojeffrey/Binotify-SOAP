@@ -6,6 +6,7 @@ import binotify.dao.LoggingImpl;
 import binotify.dao.SubscriptionImpl;
 import binotify.model.Respond;
 import binotify.security.ApiKey;
+import com.google.protobuf.Api;
 import com.sun.net.httpserver.HttpExchange;
 import binotify.model.Subscription;
 
@@ -60,20 +61,33 @@ public class BinotifyServiceImpl implements BinotifyService {
     }
 
     public Respond newSubscription(String creator_id, String subscriber_id, String api_key) {
-        // add logging
+        ApiKey key;
         String IP = this.getReqIP();
         String uri = this.getReqURI();
         String this_method_name = new Object() {}
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        LoggingImpl.create(IP,this_method_name,uri);
+
+        // check API KEY
+        try {
+            key = new ApiKey(api_key);
+            key.isValid(this_method_name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Respond("error", e.getMessage());
+        }
+
+        StringBuilder desc = new StringBuilder();
+        desc.append(key.getService());
+        desc.append(": ");
+        desc.append(this_method_name);
+
+        // add logging
+        LoggingImpl.create(IP,desc.toString(),uri);
 
         // create a new subscription
         try {
-            ApiKey key = new ApiKey(api_key);
-            key.isValid(this_method_name);
-
             boolean isSuccess = SubscriptionImpl.create(subscriber_id, creator_id);
             if (!isSuccess) {
                 return new Respond("error", "subscription already exists");
@@ -86,20 +100,35 @@ public class BinotifyServiceImpl implements BinotifyService {
     }
 
     public Respond checkSubscription(String creator_id, String subscriber_id, String api_key) {
-        // add logging
+        ApiKey key;
         String IP = this.getReqIP();
         String uri = this.getReqURI();
         String this_method_name = new Object() {}
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        LoggingImpl.create(IP,this_method_name,uri);
+
+
+        // check API KEY
+        try {
+            key = new ApiKey(api_key);
+            key.isValid(this_method_name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Respond("error", e.getMessage());
+        }
+
+        StringBuilder desc = new StringBuilder();
+        desc.append(key.getService());
+        desc.append(": ");
+        desc.append(this_method_name);
+
+        // add logging
+        LoggingImpl.create(IP,desc.toString(),uri);
 
 
         // get the status of a subscription
         try {
-            ApiKey key = new ApiKey(api_key);
-            key.isValid(this_method_name);
 
             Subscription subs = SubscriptionImpl.get(creator_id, subscriber_id);
             // check if null
@@ -114,20 +143,34 @@ public class BinotifyServiceImpl implements BinotifyService {
     }
 
     public Respond updateSubscription( String creator_id, String subscriber_id, String status, String api_key) {
-        // do logging
+        ApiKey key;
         String IP = this.getReqIP();
         String uri = this.getReqURI();
         String this_method_name = new Object() {}
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        LoggingImpl.create(IP,this_method_name,uri);
+
+        // check API KEY
+        try {
+            key = new ApiKey(api_key);
+            key.isValid(this_method_name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Respond("error", e.getMessage());
+        }
+
+        StringBuilder desc = new StringBuilder();
+        desc.append(key.getService());
+        desc.append(": ");
+        desc.append(this_method_name);
+
+        // add logging
+        LoggingImpl.create(IP,desc.toString(),uri);
 
 
         // update the status of a subscription
         try {
-            ApiKey key = new ApiKey(api_key);
-            key.isValid(this_method_name);
 
             boolean isSuccess = SubscriptionImpl.update(creator_id, subscriber_id, status);
             if (!isSuccess) {
@@ -171,7 +214,7 @@ public class BinotifyServiceImpl implements BinotifyService {
         }
     }
 
-    public Respond generateApiKey(String password, String csp, String validUntil) {
+    public Respond generateApiKey(String password, String csp, String validUntil, String service) {
         // add logging
         String IP = this.getReqIP();
         String uri = this.getReqURI();
@@ -195,25 +238,38 @@ public class BinotifyServiceImpl implements BinotifyService {
             return new Respond("error", "Date format must be dd/mm/yyyy");
         }
 
-        key = new ApiKey(valid_until_d, csp.split(","));
+        key = new ApiKey(valid_until_d, csp.split(","), service);
 
         return new Respond("token", key.getKey());
     }
     
     public List<Subscription> getAllSubscriptionRequests(String api_key) {
-        // add logging
+        ApiKey key;
         String IP = this.getReqIP();
         String uri = this.getReqURI();
         String this_method_name = new Object() {}
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        LoggingImpl.create(IP,this_method_name,uri);
+
+        // check API KEY
+        try {
+            key = new ApiKey(api_key);
+            key.isValid(this_method_name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<Subscription>();
+        }
+
+        StringBuilder desc = new StringBuilder();
+        desc.append(key.getService());
+        desc.append(": ");
+        desc.append(this_method_name);
+
+        // add logging
+        LoggingImpl.create(IP,desc.toString(),uri);
         
         try {
-            ApiKey key = new ApiKey(api_key);
-            key.isValid(this_method_name);
-
             List<Subscription> subscriptions = SubscriptionImpl.getAll();
             return subscriptions;
         } catch (Exception e) {

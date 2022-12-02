@@ -18,18 +18,21 @@ public class ApiKey {
     public Date created_date;
     public Date valid_until;
     public String[] privileges;
+    public String service;
 
     public ApiKey(){
 
     }
 
-    public ApiKey(Date valid_until, String[] privileges){
+    public ApiKey(Date valid_until, String[] privileges, String service){
         String[] infos = new String[3+ privileges.length];
         Date today = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
         String rawKey;
         String encKey;
+        String encService;
+        String[] encs = new String[2];
 
         infos[0] = ApiKey.secret_string;
         infos[1] = formatter.format(today);
@@ -43,12 +46,18 @@ public class ApiKey {
 
         rawKey = this.concatCharSeparated(infos,'.');
         encKey = aesEncryptionDecryption.encrypt(rawKey, ApiKey.aes_key);
+        encService = aesEncryptionDecryption.encrypt(service, ApiKey.aes_key);
+
+        encs[0] = encService;
+        encs[1] = encKey;
+        encKey = this.concatCharSeparated(encs, '.');
 
         this.secret = ApiKey.secret_string;
         this.key = encKey;
         this.privileges = privileges;
         this.valid_until = valid_until;
         this.created_date = today;
+        this.service = service;
     }
 
     public ApiKey(String from_key){
@@ -57,14 +66,23 @@ public class ApiKey {
         String[] infos;
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         String[] privileges;
+        String service;
+        String[] encs;
 
-        dec = aesEncryptionDecryption.decrypt(from_key, ApiKey.aes_key);
+        encs = from_key.split("\\.");
+
+
+        service = aesEncryptionDecryption.decrypt(encs[0], ApiKey.aes_key);
+        dec = aesEncryptionDecryption.decrypt(encs[1], ApiKey.aes_key);
+
         infos = dec.split("\\.");
         try {
+            System.out.println(dec);
             this.key = from_key;
             this.secret = infos[0];
             this.created_date = formatter.parse(infos[1]);
             this.valid_until = formatter.parse(infos[2]);
+            this.service = service;
 
             privileges = new String[infos.length-3];
             IntStream.range(3, infos.length).forEach(i -> {
@@ -133,12 +151,15 @@ public class ApiKey {
     public String[] getPrivileges() {
         return privileges;
     }
+    public String getService() {
+        return service;
+    }
 
     public static void main(String[] args) throws ParseException {
         String sDate1="28/11/2022";
         Date date1=new SimpleDateFormat("dd/MM/yyyy").parse(sDate1);
         String[] ss = {"newSubscription", "checkSubscription"};
-        ApiKey test = new ApiKey(date1,ss);
+        ApiKey test = new ApiKey(date1,ss, "rest");
 
         System.out.println(test.getKey());
         System.out.println(Arrays.toString(test.getPrivileges()));
